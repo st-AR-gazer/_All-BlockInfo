@@ -37,7 +37,7 @@ array<string> blocksWithDefaultRotation = {
 void Main() {
     BlockProcessingData data("", blocksWithDefaultRotation, folderPaths);
 
-    log("Starting to process blocks.");
+    log("Starting to process blocks.", LogLevel::Info, 40, "Main");
     startnew(Coro_ProcessBlocks, data);
 }
 
@@ -46,28 +46,28 @@ void Coro_ProcessBlocks(ref@ dataRef) {
 
     for (data.folderIndex = 0; data.folderIndex < data.folderPaths.Length; data.folderIndex++) {
         data.folderPath = data.folderPaths[data.folderIndex];
-        log("Loading folder: " + data.folderPath);
+        log("Loading folder: " + data.folderPath, LogLevel::Info, 49, "Coro_ProcessBlocks");
         CSystemFidsFolder@ folder = Fids::GetGameFolder(data.folderPath);
         
         if (folder is null) {
-            log("Failed to load folder at path: " + data.folderPath);
+            log("Failed to load folder at path: " + data.folderPath, LogLevel::Info, 53, "Coro_ProcessBlocks");
             continue;
         }
 
-        log("Folder loaded successfully at path: " + data.folderPath);
-        log("Folder name: " + folder.DirName);
-        log("Number of leaves: " + folder.Leaves.Length);
+        log("Folder loaded successfully at path: " + data.folderPath, LogLevel::Info, 57, "Coro_ProcessBlocks");
+        log("Folder name: " + folder.DirName, LogLevel::Info, 58, "Coro_ProcessBlocks");
+        log("Number of leaves: " + folder.Leaves.Length, LogLevel::Info, 59, "Coro_ProcessBlocks");
 
         const uint batchSize = 40000;
         for (data.leafIndex = 0; data.leafIndex < folder.Leaves.Length; data.leafIndex++) {
             CSystemFidFile@ file = cast<CSystemFidFile@>(folder.Leaves[data.leafIndex]);
             
             if (file is null) {
-                log("Encountered a null file pointer at index " + data.leafIndex);
+                log("Encountered a null file pointer at index " + data.leafIndex, LogLevel::Info, 66, "Coro_ProcessBlocks");
                 continue;
             }
 
-            log("Processing block " + (data.leafIndex + 1) + " out of " + folder.Leaves.Length + ": " + file.FileName);
+            log("Processing block " + (data.leafIndex + 1) + " out of " + folder.Leaves.Length + ": " + file.FileName, LogLevel::Info, 70, "Coro_ProcessBlocks");
             ProcessBlock(file, data);
 
             if (data.leafIndex % batchSize == 0) {
@@ -76,17 +76,17 @@ void Coro_ProcessBlocks(ref@ dataRef) {
         }
     }
 
-    log("Finished processing blocks. Writing data to files.");
+    log("Finished processing blocks. Writing data to files.", LogLevel::Info, 79, "Coro_ProcessBlocks");
     
     _IO::File::WriteToFile(IO::FromStorageFolder("BlockData.json"), Json::Write(data.blocks));
-    log("Block data written to " + IO::FromStorageFolder("BlockData.json"));
+    log("Block data written to " + IO::FromStorageFolder("BlockData.json"), LogLevel::Info, 82, "Coro_ProcessBlocks");
 }
 
 void ProcessBlock(CSystemFidFile@ file, BlockProcessingData@ data) {
     string fullBlockName = file.FileName;
     int endIndex = _Text::NthLastIndexOf(fullBlockName, ".", 2);
     if (endIndex < 0) {
-        log("Failed to find block name for file: " + fullBlockName);
+        log("Failed to find block name for file: " + fullBlockName, LogLevel::Info, 89, "ProcessBlock");
         return;
     }
     string blockName = fullBlockName.SubStr(0, endIndex);
