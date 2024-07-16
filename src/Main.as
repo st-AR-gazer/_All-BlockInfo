@@ -31,7 +31,8 @@ array<string> blocksWithDefaultRotation = {
     "DecoWallLoopEnd",
     "DecoWallArchSlope2Straight",
     "DecoWallArchSlope2End",
-    "DecoWallArchSlope2UTop"
+    "DecoWallArchSlope2UTop",
+    "DecoWallLoopOutStart"
 };
 
 void Main() {
@@ -131,5 +132,5 @@ nat3 GetBlockSize(CSystemFidFile@ file) {
     if (blockInfo !is null && blockInfo.VariantBaseGround !is null) {
         return blockInfo.VariantBaseGround.Size;
     }
-    return nat3(-1, -1, -1);
+    return nat3(0, 0, 0);
 }
