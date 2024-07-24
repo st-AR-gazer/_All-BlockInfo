@@ -6,14 +6,11 @@ void Coro_ExtractBlocksAndItems(ref@ dataRef) {
         log("Loading folder: " + data.folderPath, LogLevel::Info, 6, "Coro_ExtractBlocksAndItems");
         CSystemFidsFolder@ folder = Fids::GetGameFolder(data.folderPath);
         
-        if (folder is null) {
-            log("Failed to load folder at path: " + data.folderPath, LogLevel::Info, 10, "Coro_ExtractBlocksAndItems");
-            continue;
-        }
+        if (folder is null) { log("Failed to load folder at path: " + data.folderPath, LogLevel::Info, 10, "Coro_ExtractBlocksAndItems"); continue; }
 
         log("Folder loaded successfully at path: " + data.folderPath, LogLevel::Info, 14, "Coro_ExtractBlocksAndItems");
 
-        const uint batchSize = 40000;
+        const uint batchSize = 50;
         for (data.leafIndex = 0; data.leafIndex < folder.Leaves.Length; data.leafIndex++) {
             CSystemFidFile@ file = cast<CSystemFidFile@>(folder.Leaves[data.leafIndex]);
             
@@ -69,9 +66,4 @@ void ExtractAndMoveFile(CSystemFidFile@ file, const string &in filename, const s
     } else {
         log("Failed to extract file: " + file.FileName, LogLevel::Error, 70, "ExtractAndMoveFile");
     }
-}
-
-void WriteJsonToFile(const Json::Value &in data, const string &in filename) {
-    _IO::File::WriteToFile(filename, Json::Write(data));
-    log("Block data written to " + filename, LogLevel::Info, 76, "WriteJsonToFile");
 }

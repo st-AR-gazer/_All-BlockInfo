@@ -1,7 +1,7 @@
 // Use "size" for extracting sizes, 
-// Use "extract" for extracting blocks/items, 
+// Use "extract" for extracting blocks/items, // Extract does not work, it is abandoned for now as I found the files I needed elsewhere.
 // Use "none" for doing nothing
-const string START_CONDITION = "extract"; 
+const string START_CONDITION = "size"; 
 
 array<string> folderPaths = {
     "GameData/Stadium/GameCtnBlockInfo/GameCtnBlockInfoClassic",
